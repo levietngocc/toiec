@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Lịch trình 40 ngày chi tiết | TOEIC 450+</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #f8fafc; }
+        .day-card {
+            transition: all 0.2s;
+        }
+        .day-card.completed {
+            background-color: #f0fdf4;
+            border-left: 6px solid #22c55e;
+        }
+        .phase-badge {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+        .subtask-checkbox {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+        .subtask-completed {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+        .tip-badge {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+        }
+        .study-badge {
+            background: #dbeafe;
+            border-left: 3px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <a href="index.html" class="text-blue-600 hover:underline flex items-center gap-1">← Trang chủ</a>
+            <h1 class="text-2xl font-bold text-gray-800">⚡ 40 NGÀY – LỘ TRÌNH HỌC + BÀI TẬP</h1>
+            <div class="w-16"></div>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-2xl p-5 mb-8 text-white">
+            <h2 class="text-xl font-bold mb-2">📌 CẤU TRÚC MỖI NGÀY</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mt-3">
+                <div class="bg-white/20 rounded-lg p-2 text-center">📖 1. HỌC LÝ THUYẾT<br>Ngữ pháp + Từ vựng + Kỹ thuật</div>
+                <div class="bg-white/20 rounded-lg p-2 text-center">✍️ 2. LÀM BÀI TẬP<br>Áp dụng ngay sau khi học</div>
+                <div class="bg-white/20 rounded-lg p-2 text-center">🔍 3. PHÂN TÍCH LỖI<br>Tự chữa + Ghi chú</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-5 mb-6">
+            <div class="flex flex-wrap justify-between items-center gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="font-semibold text-gray-700">📊 Tiến độ 40 ngày:</span>
+                    <span id="completedCount" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">0/40</span>
+                </div>
+                <button id="resetAllBtn" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm shadow transition">Reset tất cả</button>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 mt-3">
+                <div id="progressFill" class="bg-gradient-to-r from-green-500 to-emerald-600 h-3 rounded-full" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">💡 Tick từng task sau khi hoàn thành → tự động lưu tiến độ</p>
+        </div>
+
+        <div id="scheduleContainer" class="space-y-8"></div>
+    </div>
+
+    <script>
+        const scheduleData = [];
+
+        function addDay(day, phase, tasks, tips = "") {
+            scheduleData.push({ day, phase, tasks, tips });
+        }
+
+        // ==================== GIAI ĐOẠN 1: PART 1, PART 2, PART 5 (Ngày 1-10) ====================
+        const p1 = "🎯 GIAI ĐOẠN 1: NỀN TẢNG – PART 1, PART 2, PART 5";
+
+        addDay(1, p1, [
+            "📚 HỌC: Thì hiện tại đơn (công thức, dấu hiệu nhận biết, cách dùng) – Xem video/đọc lý thuyết Study4",
+            "📚 HỌC: Thì hiện tại tiếp diễn (công thức, dấu hiệu, cách dùng)",
+            "📚 HỌC: 30 từ vựng chủ đề Văn phòng (flashcard Study4) – học nghĩa + phát âm + ví dụ",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (thì hiện tại đơn/tiếp diễn) trên Study4 – bấm giờ 1 phút/câu",
+            "🔍 PHÂN TÍCH: Tự chữa 15 câu vừa làm, ghi lại lỗi sai vào sổ",
+            "🔍 PHÂN TÍCH: Xem giải thích chi tiết cho những câu không tự chữa được",
+            "🎧 HỌC: Kỹ thuật làm Part 1 – Cách nhận diện hành động, vị trí, chủ thể trong ảnh",
+            "🎧 BÀI TẬP: Làm 15 câu Part 1 trên Study4 – bấm giờ 1 phút/câu",
+            "🎧 PHÂN TÍCH: Tự chữa không xem script, chép chính tả 5 câu sai (tốc độ 1.1x)"
+        ], "💡 Mẹo: Học lý thuyết xong phải làm bài tập ngay để ghi nhớ. Đừng học suông!");
+
+        addDay(2, p1, [
+            "📚 HỌC: Thì quá khứ đơn (công thức, dấu hiệu, động từ bất quy tắc)",
+            "📚 HỌC: Thì quá khứ tiếp diễn (cách dùng, phân biệt với quá khứ đơn)",
+            "📚 HỌC: 30 từ vựng chủ đề Du lịch",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (thì quá khứ) – bấm giờ 1 phút/câu",
+            "🔍 PHÂN TÍCH: Tự chữa, ghi lỗi, xem giải thích",
+            "🎧 BÀI TẬP: Part 1 – Làm 15 câu mới",
+            "🎧 PHÂN TÍCH: Tự chữa, chép chính tả 5 câu",
+            "📝 ÔN: Xem lại 30 từ vựng ngày 1 + ngày 2 qua flashcard"
+        ], "💡 Học động từ bất quy tắc: Chia thành nhóm để dễ nhớ (nhóm giữ nguyên, nhóm thay đổi nguyên âm).");
+
+        addDay(3, p1, [
+            "📚 HỌC: So sánh hơn (công thức với tính từ ngắn/dài, ngoại lệ)",
+            "📚 HỌC: So sánh nhất (công thức, cách dùng)",
+            "📚 HỌC: 30 từ vựng chủ đề Mua sắm",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (so sánh)",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 HỌC: Kỹ thuật Part 2 – Cách nhận biết từ để hỏi (Who, What, When, Where, Why, How)",
+            "🎧 BÀI TẬP: Làm 20 câu Part 2 (Wh-questions) – bấm giờ 1 phút/câu",
+            "🎧 PHÂN TÍCH: Tự chữa không xem script, chép chính tả 5 câu",
+            "📝 ÔN: Flashcard 90 từ đã học"
+        ], "💡 Part 2: 'When' → đáp án thời gian. 'Where' → địa điểm. 'Who' → người. 'Why' → lý do.");
+
+        addDay(4, p1, [
+            "📚 HỌC: Giới từ chỉ thời gian (in, on, at) và giới từ chỉ nơi chốn (in, on, at, by, next to, in front of)",
+            "📚 HỌC: Đại từ nhân xưng, đại từ sở hữu, tính từ sở hữu",
+            "📚 HỌC: 30 từ vựng chủ đề Công nghệ",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (giới từ + đại từ)",
+            "🔍 PHÂN TÍCH: Tự chữa, ghi lỗi",
+            "🎧 BÀI TẬP: Part 2 – Làm 25 câu (Wh-questions + yes/no)",
+            "🎧 PHÂN TÍCH: Chép chính tả 10 câu sai (tốc độ 1.1x)",
+            "📝 ÔN: Tạo danh sách giới từ hay nhầm"
+        ], "💡 Giới từ: at + giờ, on + ngày/ngày tháng, in + tháng/năm/mùa. at + địa điểm cụ thể, in + thành phố/quốc gia.");
+
+        addDay(5, p1, [
+            "📚 HỌC: Câu điều kiện loại 0 (If + hiện tại, hiện tại) – dùng cho sự thật hiển nhiên",
+            "📚 HỌC: Câu điều kiện loại 1 (If + hiện tại, will + Vinf) – dùng cho khả năng xảy ra",
+            "📚 HỌC: 30 từ vựng chủ đề Sức khỏe",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (câu điều kiện loại 0,1)",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 BÀI TẬP: Part 2 – Làm 25 câu (yes/no questions + câu đề nghị)",
+            "🎧 PHÂN TÍCH: Chép chính tả 10 câu",
+            "📝 ÔN: Học thuộc cấu trúc If... will..."
+        ], "💡 Câu điều kiện loại 1: If + S + V(hiện tại), S + will + Vinf. Ví dụ: If it rains, I will stay home.");
+
+        addDay(6, p1, [
+            "📚 HỌC: Ôn tập tất cả ngữ pháp tuần 1 (hiện tại, quá khứ, so sánh, giới từ, đại từ, câu điều kiện)",
+            "📚 HỌC: 30 từ vựng chủ đề Ngân hàng",
+            "✍️ BÀI TẬP: Làm 20 câu Part 5 (tổng hợp tuần 1)",
+            "🔍 PHÂN TÍCH: Tự chữa, phân tích lỗi sai",
+            "🎧 BÀI TẬP: Part 1 (20 câu) + Part 2 (30 câu) – ôn tổng hợp",
+            "🎧 PHÂN TÍCH: Chép chính tả các câu sai",
+            "📝 ÔN: Flashcard 150 từ đã học"
+        ], "💡 Cuối tuần 1: Tổng kết những lỗi hay mắc nhất vào sổ để tuần sau tránh.");
+
+        addDay(7, p1, [
+            "📚 HỌC: Ôn lại các lỗi đã ghi trong tuần",
+            "✍️ TEST PART 5: 30 câu mới – bấm giờ 30 phút → GHI % ĐÚNG (mục tiêu ≥75%)",
+            "🔍 PHÂN TÍCH TEST: Tự chữa không xem đáp án, sau đó đối chiếu, ghi lỗi",
+            "🎧 TEST PART 1+2: 50 câu – bấm giờ 25 phút → GHI % (Part2 cần ≥70%)",
+            "🔍 PHÂN TÍCH: Chép chính tả câu sai, xem transcript",
+            "📝 TỔNG KẾT: Viết vào notes những lỗi cần cải thiện"
+        ], "⚠️ QUAN TRỌNG: Nếu chưa đạt chuẩn, dành ngày 8-9-10 để ôn lại part đó. Không chuyển GĐ2 nếu chưa đạt!");
+
+        addDay(8, p1, [
+            "📚 ÔN LẠI: Ngữ pháp phần còn yếu (xem lại lỗi từ test ngày 7)",
+            "📚 HỌC: Câu bị động hiện tại (is/am/are + V3/ed)",
+            "📚 HỌC: Câu bị động quá khứ (was/were + V3/ed)",
+            "📚 HỌC: 30 từ vựng chủ đề Giao thông",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (bị động)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 2 – 25 câu (câu hỏi đuôi, câu đề nghị)",
+            "🎧 PHÂN TÍCH: Chép chính tả 10 câu"
+        ], "💡 Bị động: Chủ thể thực hiện hành động không quan trọng hoặc không biết. Ví dụ: The report was written by John.");
+
+        addDay(9, p1, [
+            "📚 HỌC: Bị động tương lai (will be + V3/ed)",
+            "📚 HỌC: Bị động với động từ khuyết thiếu (can be, must be, should be + V3/ed)",
+            "📚 HỌC: 30 từ vựng chủ đề Nhân sự",
+            "✍️ BÀI TẬP: Làm 15 câu Part 5 (bị động các thì) – tốc độ 45 giây/câu",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 BÀI TẬP: Part 2 – 25 câu + chép chính tả",
+            "📝 ÔN: Tổng hợp bị động vào 1 trang giấy"
+        ], "💡 Bị động với can: can be + V3/ed. Ví dụ: This problem can be solved easily.");
+
+        addDay(10, p1, [
+            "📚 ÔN: Tất cả ngữ pháp đã học (hiện tại, quá khứ, so sánh, giới từ, điều kiện, bị động)",
+            "✍️ TEST PART 5: 30 câu – tối đa 25 phút → GHI % (cần ≥75%)",
+            "🔍 PHÂN TÍCH: Ghi lỗi vào sổ",
+            "🎧 TEST PART 2: 40 câu – bấm giờ → GHI % (cần ≥70%)",
+            "🔍 PHÂN TÍCH: Chép chính tả 10 câu sai",
+            "📝 ĐÁNH GIÁ: Nếu đạt chuẩn, chuyển sang GĐ2. Nếu chưa, dành 2 ngày ôn bổ sung."
+        ], "🔥 MỐC QUAN TRỌNG: Phải đạt Part5≥75% và Part2≥70% mới được lên GĐ2!");
+
+        // ==================== GIAI ĐOẠN 2: PART 3, PART 4, PART 6 (Ngày 11-20) ====================
+        const p2 = "🚀 GIAI ĐOẠN 2: TĂNG TỐC – PART 3, PART 4 (THÔNG TIN), PART 6";
+
+        addDay(11, p2, [
+            "📚 HỌC: Mệnh đề quan hệ (who, which, that) – cách dùng, vị trí",
+            "📚 HỌC: 30 từ vựng chủ đề Hợp đồng",
+            "📚 HỌC: Kỹ thuật làm Part 3 – Đọc câu hỏi trước, gạch chân từ khóa",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (mệnh đề quan hệ) – đọc hiểu ngữ cảnh trước khi chọn",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 BÀI TẬP: Part 3 – 5 đoạn hội thoại (đọc câu hỏi trước khi nghe)",
+            "🎧 PHÂN TÍCH: Chép chính tả 1 đoạn hội thoại (tốc độ 1.1x)"
+        ], "💡 Mệnh đề quan hệ: who (người), which (vật), that (cả người và vật). Ví dụ: The man who called you is my boss.");
+
+        addDay(12, p2, [
+            "📚 HỌC: Liên từ (although, however, therefore, because, so) – cách dùng, vị trí",
+            "📚 HỌC: 30 từ vựng chủ đề Marketing",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (liên từ)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 3 – 6 đoạn hội thoại (tập trung câu hỏi chủ đề, địa điểm)",
+            "🎧 PHÂN TÍCH: Chép chính tả 1 đoạn"
+        ], "💡 Liên từ: although + mệnh đề (dù), however (tuy nhiên), therefore (vì vậy), because (bởi vì).");
+
+        addDay(13, p2, [
+            "📚 HỌC: Cụm động từ thông dụng (look forward to, give up, turn on, turn off, take care of, etc.)",
+            "📚 HỌC: Kỹ thuật làm Part 4 – Chỉ tập trung dạng tìm thông tin (chủ đề, danh tính, địa điểm, mục đích, bảng biểu)",
+            "📚 HỌC: 30 từ vựng chủ đề Sự kiện",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (cụm động từ + từ vựng)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 4 – 5 đoạn (chỉ làm dạng tìm thông tin)",
+            "🎧 PHÂN TÍCH: Chép chính tả 1 đoạn"
+        ], "💡 Cụm động từ: look forward to + Ving (mong chờ), give up + Ving (từ bỏ), turn on/off (bật/tắt).");
+
+        addDay(14, p2, [
+            "📚 ÔN TẬP: Mệnh đề quan hệ, liên từ, cụm động từ",
+            "📚 HỌC: 30 từ vựng chủ đề Văn phòng nâng cao",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (tổng hợp) – tốc độ 2 phút/đoạn",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 3 (6 đoạn) + Part 4 (4 đoạn) – mix dạng thông tin",
+            "🎧 PHÂN TÍCH: Ghi lại từ khóa nghe được"
+        ], "💡 Với Part 4, chú ý các từ nối first, next, finally để theo dõi bố cục bài nói.");
+
+        addDay(15, p2, [
+            "📚 ÔN: Tất cả ngữ pháp GĐ2",
+            "✍️ TEST PART 6: 10 đoạn mới – bấm giờ 25 phút → GHI % (cần ≥75%)",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 TEST PART 3+4: 30 câu (chỉ dạng thông tin) → GHI % (cần ≥70%)",
+            "🔍 PHÂN TÍCH: Chép chính tả câu sai",
+            "📝 TỔNG KẾT: Ghi lỗi vào notes"
+        ], "⚠️ Nếu Part6 <75% hoặc Part4 <70%, dành thời gian ôn lại trước khi chuyển GĐ3.");
+
+        addDay(16, p2, [
+            "📚 HỌC: Câu điều kiện loại 2 (If + quá khứ đơn, would + Vinf) – giả định không có thật ở hiện tại",
+            "📚 HỌC: 30 từ vựng chủ đề Bảo hiểm",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (câu điều kiện)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 3 (5 đoạn) + Part 4 (4 đoạn) – có chép chính tả",
+            "🎧 PHÂN TÍCH: Nghe lại đoạn sai, xem transcript"
+        ], "💡 Câu điều kiện loại 2: If I were you, I would study harder. (Nếu tôi là bạn, tôi sẽ học chăm hơn.)");
+
+        addDay(17, p2, [
+            "📚 HỌC: Đảo ngữ cơ bản (Never, Seldom, Only, Not only... but also)",
+            "📚 HỌC: 30 từ vựng chủ đề Nhà hàng",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (đảo ngữ)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 3 (6 đoạn) + Part 4 (5 đoạn) – làm nhanh, không chép chính tả",
+            "🎧 PHÂN TÍCH: Kiểm tra đáp án, ghi lỗi"
+        ], "💡 Đảo ngữ: Never + trợ động từ + S + V. Ví dụ: Never have I seen such a beautiful view.");
+
+        addDay(18, p2, [
+            "📚 HỌC: Ôn tập dạng bảng biểu trong Part 4 (cách đọc số liệu, xu hướng tăng/giảm)",
+            "📚 HỌC: 30 từ vựng chủ đề Sân bay",
+            "✍️ BÀI TẬP: Làm 5 đoạn Part 6 (tổng hợp)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: Part 3+4 – 11 đoạn (ưu tiên dạng bảng biểu và mục đích)",
+            "🎧 PHÂN TÍCH: Ghi lại cách hỏi dạng bảng biểu"
+        ], "💡 Bảng biểu: Thường hỏi số liệu tăng/giảm (increase, decrease, rise, fall), thời gian bắt đầu/kết thúc.");
+
+        addDay(19, p2, [
+            "📚 ÔN: Tất cả dạng bài GĐ2",
+            "✍️ BÀI TẬP: Part 6 – 10 đoạn (test tốc độ 20 phút)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 BÀI TẬP: FULL MINI LISTENING: 50 câu (Part1-4) – bấm giờ, ghi %",
+            "🔍 PHÂN TÍCH: Chép chính tả câu sai",
+            "📝 TỔNG KẾT: Ghi lỗi sai trong tuần"
+        ], "💡 Ghi lại dạng câu hỏi mình hay sai nhất để tập trung cải thiện.");
+
+        addDay(20, p2, [
+            "📚 ÔN: Các lỗi đã mắc trong GĐ2",
+            "✍️ ÔN PART 5+6: Làm 30 câu Part5 + 5 đoạn Part6 (chọn câu sai nhiều nhất)",
+            "🔍 PHÂN TÍCH: Xem lại giải thích",
+            "🎧 ÔN: Các part còn yếu (xem lại % đúng từ các test)",
+            "📝 ĐÁNH GIÁ: Sẵn sàng chuyển sang GĐ3"
+        ], "🎉 HOÀN THÀNH GIAI ĐOẠN 2! Đã làm quen với hội thoại và bài nói.");
+
+        // ==================== GIAI ĐOẠN 3: PART 7 (Ngày 21-30) ====================
+        const p3 = "📖 GIAI ĐOẠN 3: PART 7 & ÔN TẬP TỔNG HỢP";
+
+        addDay(21, p3, [
+            "📚 HỌC: Kỹ thuật làm Part 7 – Cách đọc câu hỏi trước, scan bài tìm từ khóa, không đọc toàn bộ",
+            "📚 HỌC: 30 từ vựng chủ đề Thư tín, Email",
+            "✍️ BÀI TẬP: 5 đoạn đơn Part 7 (dạng tìm thông tin – thời gian, địa điểm, người)",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 FULL LISTENING mini – không tính giờ, tập trung đúng",
+            "🔍 PHÂN TÍCH: Xem transcript, ghi lỗi"
+        ], "💡 Mẹo Part7: Câu hỏi tìm thông tin (who, when, where) dễ nhất, làm trước. Scan bài tìm từ khóa, không cần đọc toàn bộ.");
+
+        addDay(22, p3, [
+            "📚 HỌC: Kỹ thuật làm Double Passage – Đọc câu hỏi, xác định thông tin ở đoạn 1 hay đoạn 2",
+            "📚 HỌC: 30 từ vựng chủ đề Quảng cáo",
+            "✍️ BÀI TẬP: 5 đoạn đơn + 2 cặp đôi Part 7",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 Chép chính tả 2 đoạn Part3 hoặc Part4",
+            "📝 GHI CHÚ: Cách đọc ghép 2 đoạn"
+        ], "💡 Double passage: Đọc câu hỏi trước, xác định thông tin nằm ở đoạn 1 hay đoạn 2.");
+
+        addDay(23, p3, [
+            "📚 HỌC: Cách làm câu hỏi mục đích (purpose) – đáp án thường ở đầu hoặc cuối đoạn",
+            "📚 HỌC: 30 từ vựng chủ đề Hóa đơn, Hợp đồng",
+            "✍️ BÀI TẬP: 5 đơn + 3 cặp đôi Part 7 (ưu tiên câu hỏi mục đích, ý chính)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 PART 2: 30 câu – tăng tốc 30 giây/câu"
+        ], "💡 Câu hỏi mục đích: Thường hỏi 'Why...?' hoặc 'What is the purpose?'. Đáp án thường ở đầu hoặc cuối đoạn.");
+
+        addDay(24, p3, [
+            "📚 HỌC: Các dạng câu hỏi trong Part 7 (thông tin, mục đích, suy luận, từ vựng)",
+            "📚 HỌC: 30 từ vựng chủ đề Thông báo",
+            "✍️ BÀI TẬP: 7 đoạn đơn Part 7 (đủ các dạng câu hỏi)",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 PART 3+4: 10 đoạn – làm nhanh"
+        ], "💡 Thông báo: Chú ý ngày tháng, địa điểm, người tổ chức, thay đổi lịch trình.");
+
+        addDay(25, p3, [
+            "📚 ÔN: Kỹ thuật làm Part 7",
+            "✍️ TEST PART 7: 10 đoạn đơn – bấm giờ 35 phút → GHI % (cần ≥70%)",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 FULL LISTENING đề số 1 – bấm giờ 45 phút → GHI ĐIỂM",
+            "🔍 PHÂN TÍCH: Chép chính tả câu sai",
+            "📝 GHI LỖI: Ghi lại dạng câu hay sai"
+        ], "⚠️ MỐC QUAN TRỌNG: Nếu Part7 <70%, dành ngày mai ôn lại kỹ thuật scan bài.");
+
+        addDay(26, p3, [
+            "📚 HỌC: Câu điều kiện hỗn hợp (If + quá khứ hoàn thành, would have + V3/ed)",
+            "📚 HỌC: 30 từ vựng chủ đề Biên bản",
+            "✍️ BÀI TẬP: 3 cặp đôi + 2 đoạn đơn Part 7 (làm lại câu sai từ test)",
+            "🔍 PHÂN TÍCH: Xem lại giải thích chi tiết",
+            "🎧 Nghe lại các câu sai từ đề hôm trước, chép chính tả"
+        ], "💡 Câu điều kiện hỗn hợp: If I had studied, I would have passed. (Nếu tôi đã học, tôi đã đậu.)");
+
+        addDay(27, p3, [
+            "📚 HỌC: Đại từ quan hệ (whose, whom) – cách dùng",
+            "📚 HỌC: 30 từ vựng chủ đề Thư mời",
+            "✍️ BÀI TẬP: 5 đơn + 3 cặp đôi Part 7 – tăng tốc 1.5 phút/đơn, 3 phút/cặp",
+            "🔍 PHÂN TÍCH: Tự chữa",
+            "🎧 PART 4: 5 đoạn + chép chính tả 1 đoạn"
+        ], "💡 Whose: chỉ sở hữu cho người (The man whose car is red). Whom: tân ngữ chỉ người (The person whom I met).");
+
+        addDay(28, p3, [
+            "📚 ÔN: Tất cả dạng bài Part 7",
+            "✍️ BÀI TẬP: 10 đoạn Part 7 (single + double) – bấm giờ 45 phút",
+            "🔍 PHÂN TÍCH: Tự chữa, xem giải thích",
+            "🎧 FULL LISTENING đề số 2 – bấm giờ, ghi điểm",
+            "📝 TỔNG KẾT: Ghi lỗi vào notes"
+        ], "💡 Đọc double passage: Nếu câu hỏi yêu cầu đối chiếu, tìm điểm chung giữa 2 đoạn.");
+
+        addDay(29, p3, [
+            "📚 ÔN: Tất cả kỹ năng đã học",
+            "✍️ MINI TEST READING: 30c Part5 + 10đoạn Part6 + 5đơn Part7 – 60 phút",
+            "🔍 PHÂN TÍCH: Tự chữa, ghi lỗi",
+            "🎧 Ôn lại dạng Part3-4 khó (bảng biểu, hội thoại dài)",
+            "📝 GHI CHÚ: Những lỗi cần cải thiện"
+        ], "💡 Bảng biểu: Tập trung vào số liệu, phần trăm, xu hướng tăng/giảm, thời gian.");
+
+        addDay(30, p3, [
+            "📚 ÔN: Làm lại 10 câu Part7 sai nhiều nhất, phân tích kỹ",
+            "🎧 Tổng kết lỗi Listening, nghe lại các đoạn đã chép sai",
+            "📘 Ôn flashcard toàn bộ (700 từ)",
+            "📝 NGHỈ NGƠI: Xem lại chiến thuật, giữ tâm lý"
+        ], "🎉 HOÀN THÀNH GIAI ĐOẠN 3! Đã sẵn sàng cho nước rút.");
+
+        // ==================== GIAI ĐOẠN 4: THI THỬ (Ngày 31-40) ====================
+        const p4 = "💪 GIAI ĐOẠN 4: NƯỚC RÚT – THI THỬ FULL ĐỀ";
+
+        addDay(31, p4, [
+            "📚 ÔN NHANH: Chiến thuật làm bài (5 phút)",
+            "✍️ ĐỀ FULL READING (75 phút) – bấm giờ NGHIÊM TÚC, làm như thi thật",
+            "🔍 Tự chấm, ghi điểm từng part",
+            "🎧 ĐỀ FULL LISTENING (45 phút) – bấm giờ",
+            "🔍 Tự chấm, ghi điểm",
+            "📝 GHI TỔNG ĐIỂM: Ghi vào notes để theo dõi tiến bộ"
+        ], "🔥 THI THỬ LẦN 1: Không gian yên tĩnh, bấm giờ như thi thật. Không dùng điện thoại.");
+
+        addDay(32, p4, [
+            "📖 PHÂN TÍCH READING: Tự chữa không xem đáp án trước, đối chiếu sau",
+            "📖 GHI LỖI: Ghi rõ nguyên nhân sai (ngữ pháp, từ vựng, đọc thiếu)",
+            "🎧 PHÂN TÍCH LISTENING: Chép chính tả 10 câu sai (tốc độ 1.1x)",
+            "🎧 Nghe lại các đoạn sai, xem transcript",
+            "📘 Ôn từ vựng theo lỗi phát hiện được"
+        ], "💡 Phân tích lỗi: Ghi rõ nguyên nhân (nghe nhầm, từ vựng chưa biết, ngữ pháp sai).");
+
+        addDay(33, p4, [
+            "✍️ ĐỀ FULL READING (75 phút) – đề mới",
+            "🔍 Tự chấm, so sánh điểm với lần 1",
+            "🎧 ĐỀ FULL LISTENING (45 phút) – đề mới",
+            "🔍 Tự chấm",
+            "📝 GHI ĐIỂM: Xem đã cải thiện chưa"
+        ], "🔥 THI THỬ LẦN 2: Cố gắng cải thiện điểm số so với lần 1.");
+
+        addDay(34, p4, [
+            "📖 PHÂN TÍCH: Làm lại Part5-6 sai",
+            "📖 HỌC: Ghi nhớ cấu trúc câu đã sai",
+            "🎧 PHÂN TÍCH: Chép chính tả thêm 5 câu",
+            "📘 Ôn flashcard 800 từ (chỉ ôn nhanh)"
+        ], "💡 Với Part5-6: Học thuộc cấu trúc câu đã sai, tránh lặp lại.");
+
+        addDay(35, p4, [
+            "✍️ ĐỀ FULL READING (75 phút)",
+            "🎧 ĐỀ FULL LISTENING (45 phút)",
+            "📝 GHI ĐIỂM",
+            "📘 Nghỉ ngơi"
+        ], "🔥 THI THỬ LẦN 3: Tập trung vào tốc độ, không để thiếu thời gian.");
+
+        addDay(36, p4, [
+            "📖 PHÂN TÍCH: Tập trung vào Part7 (các cặp đôi)",
+            "🎧 PHÂN TÍCH: Nghe lại Part3-4 những đoạn sai",
+            "📘 Ôn từ vựng trọng tâm (200 từ hay gặp)"
+        ], "💡 Part7: Với double passage, đọc câu hỏi trước, sau đó scan cả 2 đoạn.");
+
+        addDay(37, p4, [
+            "✍️ ĐỀ FULL READING – tăng tốc, xong sớm 5 phút",
+            "🎧 ĐỀ FULL LISTENING – tăng tốc",
+            "📝 GHI ĐIỂM",
+            "📘 Nghỉ"
+        ], "🔥 THI THỬ LẦN 4: Tập làm nhanh hơn để dành thời gian kiểm tra.");
+
+        addDay(38, p4, [
+            "📖 PHÂN TÍCH LỖI CUỐI: Ghi vào sổ những lỗi lặp lại",
+            "🎧 Chép chính tả 3 đoạn Part2 (câu hỏi dài)",
+            "📘 Ôn lại sổ lỗi (đọc qua)",
+            "📝 XEM LẠI: Những lỗi đã mắc trong 4 đề thi thử"
+        ], "💡 Lỗi lặp lại: Đây là điểm yếu nhất, cần xem lại kỹ trước ngày thi.");
+
+        addDay(39, p4, [
+            "✍️ Làm 50 câu Part5+6 (tốc độ 40 giây/câu) – giữ cảm giác",
+            "🔍 Tự chữa nhanh",
+            "🎧 Làm Part3+4 (10 đoạn) – không bấm giờ, tập trung đúng",
+            "📘 Ôn nhẹ flashcard, xem lại mẹo thi",
+            "📝 CHUẨN BỊ: Soạn đồ dùng thi"
+        ], "💡 Ngày cuối ôn: Chỉ ôn nhẹ, không học quá nhiều, tránh căng thẳng.");
+
+        addDay(40, p4, [
+            "📖 Nghỉ ngơi, xem lại chiến thuật làm bài",
+            "🎧 Nghe nhạc tiếng Anh nhẹ nhàng",
+            "📘 Giữ tâm lý thoải mái",
+            "🎯 KIỂM TRA: Bút chì, tẩy, CCCD, đồng hồ, nước uống",
+            "😴 Ngủ sớm, đủ giấc"
+        ], "🎉 CHÚC BẠN THI TỐT! Tự tin vào những gì đã học trong 40 ngày qua. Bạn đã làm rất tốt!");
+
+        // ========= RENDER =========
+        const container = document.getElementById('scheduleContainer');
+        
+        function renderSchedule() {
+            container.innerHTML = '';
+            let lastPhase = '';
+            for (let i = 0; i < scheduleData.length; i++) {
+                const day = scheduleData[i];
+                if (day.phase !== lastPhase) {
+                    const phaseDiv = document.createElement('div');
+                    phaseDiv.className = 'phase-badge text-white text-lg font-bold px-5 py-3 rounded-xl shadow-md mb-3';
+                    phaseDiv.innerText = day.phase;
+                    container.appendChild(phaseDiv);
+                    lastPhase = day.phase;
+                }
+
+                const dayKey = `day40_${day.day}`;
+                const savedCompleted = localStorage.getItem(dayKey) === 'true';
+                
+                const card = document.createElement('div');
+                card.className = `day-card bg-white rounded-xl shadow-md p-5 border-l-4 transition ${savedCompleted ? 'completed' : 'border-transparent'}`;
+                card.id = `day-card-${day.day}`;
+                
+                let tasksHtml = '';
+                day.tasks.forEach((task, idx) => {
+                    const isTaskCompleted = localStorage.getItem(`day40_${day.day}_task_${idx}`) === 'true';
+                    let bgClass = '';
+                    if (task.includes('📚 HỌC:')) bgClass = 'bg-blue-50';
+                    else if (task.includes('✍️ BÀI TẬP:') || task.includes('TEST') || task.includes('ĐỀ FULL')) bgClass = 'bg-yellow-50';
+                    else if (task.includes('🔍 PHÂN TÍCH:') || task.includes('Tự chữa')) bgClass = 'bg-purple-50';
+                    else if (task.includes('🎧')) bgClass = 'bg-green-50';
+                    else if (task.includes('📘') || task.includes('📝')) bgClass = 'bg-orange-50';
+                    
+                    tasksHtml += `
+                        <div class="flex items-start gap-2 py-1 ${bgClass} rounded-lg px-2">
+                            <input type="checkbox" class="subtask-checkbox mt-1" data-day="${day.day}" data-task-idx="${idx}" ${isTaskCompleted ? 'checked' : ''}>
+                            <span class="text-sm text-gray-700 ${isTaskCompleted ? 'subtask-completed' : ''}">${task}</span>
+                        </div>
+                    `;
+                });
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3 flex-wrap gap-2">
+                        <div class="font-bold text-lg flex items-center gap-2">
+                            <span class="bg-gray-800 text-white text-sm rounded-full w-8 h-8 flex items-center justify-center">${day.day}</span>
+                            <span>Ngày ${day.day}</span>
+                        </div>
+                        <label class="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-full">
+                            <input type="checkbox" data-day="${day.day}" class="day-checkbox w-5 h-5" ${savedCompleted ? 'checked' : ''}>
+                            <span>Hoàn thành ngày</span>
+                        </label>
+                    </div>
+                    <div class="space-y-1 mb-3">
+                        ${tasksHtml}
+                    </div>
+                    ${day.tips ? `
+                        <div class="tip-badge mt-3 p-2 rounded-lg text-xs text-amber-800 flex gap-2">
+                            <span>💡</span>
+                            <span>${day.tips}</span>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(card);
+            }
+            attachEvents();
+            updateProgress();
+        }
+
+        function attachEvents() {
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.removeEventListener('change', handleDayCheck);
+                cb.addEventListener('change', handleDayCheck);
+            });
+            document.querySelectorAll('.subtask-checkbox').forEach(cb => {
+                cb.removeEventListener('change', handleSubtaskCheck);
+                cb.addEventListener('change', handleSubtaskCheck);
+            });
+        }
+
+        function handleDayCheck(e) {
+            const day = e.target.getAttribute('data-day');
+            const checked = e.target.checked;
+            localStorage.setItem(`day40_${day}`, checked);
+            
+            const dayData = scheduleData.find(d => d.day == day);
+            if (dayData) {
+                for (let i = 0; i < dayData.tasks.length; i++) {
+                    localStorage.setItem(`day40_${day}_task_${i}`, checked ? 'true' : 'false');
+                }
+            }
+            updateCardStyle(day);
+            updateProgress();
+        }
+
+        function handleSubtaskCheck(e) {
+            const day = e.target.getAttribute('data-day');
+            const taskIdx = e.target.getAttribute('data-task-idx');
+            const checked = e.target.checked;
+            localStorage.setItem(`day40_${day}_task_${taskIdx}`, checked);
+            
+            const dayData = scheduleData.find(d => d.day == day);
+            let allCompleted = true;
+            for (let i = 0; i < dayData.tasks.length; i++) {
+                if (localStorage.getItem(`day40_${day}_task_${i}`) !== 'true') {
+                    allCompleted = false;
+                    break;
+                }
+            }
+            localStorage.setItem(`day40_${day}`, allCompleted);
+            updateCardStyle(day);
+            updateProgress();
+            
+            const taskSpan = e.target.parentElement.querySelector('span');
+            if (taskSpan) {
+                if (checked) taskSpan.classList.add('subtask-completed');
+                else taskSpan.classList.remove('subtask-completed');
+            }
+        }
+
+        function updateCardStyle(day) {
+            const isCompleted = localStorage.getItem(`day40_${day}`) === 'true';
+            const card = document.getElementById(`day-card-${day}`);
+            if (card) {
+                if (isCompleted) card.classList.add('completed');
+                else card.classList.remove('completed');
+            }
+            const dayCheckbox = document.querySelector(`.day-checkbox[data-day="${day}"]`);
+            if (dayCheckbox) dayCheckbox.checked = isCompleted;
+        }
+
+        function updateProgress() {
+            let completed = 0;
+            for (let i = 1; i <= 40; i++) {
+                if (localStorage.getItem(`day40_${i}`) === 'true') completed++;
+            }
+            document.getElementById('completedCount').innerText = `${completed}/40`;
+            const percent = (completed / 40) * 100;
+            document.getElementById('progressFill').style.width = `${percent}%`;
+        }
+
+        document.getElementById('resetAllBtn').addEventListener('click', () => {
+            if (confirm('⚠️ RESET toàn bộ tiến độ 40 ngày? Hành động này không thể hoàn tác.')) {
+                for (let i = 1; i <= 40; i++) {
+                    localStorage.removeItem(`day40_${i}`);
+                    const dayData = scheduleData.find(d => d.day == i);
+                    if (dayData) {
+                        for (let j = 0; j < dayData.tasks.length; j++) {
+                            localStorage.removeItem(`day40_${i}_task_${j}`);
+                        }
+                    }
+                }
+                renderSchedule();
+            }
+        });
+
+        renderSchedule();
+    </script>
+</body>
+</html>

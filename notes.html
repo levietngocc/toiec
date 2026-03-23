@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ghi chú theo danh mục | TOEIC 450+</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .category-card {
+            transition: all 0.2s;
+        }
+        .note-item {
+            transition: background 0.1s;
+        }
+        .completed-note {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <a href="index.html" class="text-blue-600 hover:underline flex items-center gap-1">← Trang chủ</a>
+            <h1 class="text-2xl font-bold text-gray-800">📌 Ghi chú theo danh mục</h1>
+            <div class="w-16"></div>
+        </div>
+
+        <!-- Progress tổng thể -->
+        <div class="bg-white rounded-2xl shadow p-4 mb-8">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+                <span class="font-semibold">✅ Tiến độ tổng thể</span>
+                <span id="totalProgressText" class="text-sm bg-blue-100 px-3 py-1 rounded-full">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
+                <div id="totalProgressBar" class="bg-green-500 h-3 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="categoriesContainer" class="space-y-6"></div>
+    </div>
+
+    <script>
+        // Định nghĩa danh mục
+        const CATEGORIES = [
+            { id: "part1", name: "🎧 PART 1 (Nghe tranh)", color: "blue" },
+            { id: "part2", name: "🎧 PART 2 (Hỏi đáp)", color: "blue" },
+            { id: "part3", name: "🎧 PART 3 (Hội thoại)", color: "blue" },
+            { id: "part4", name: "🎧 PART 4 (Bài nói)", color: "blue" },
+            { id: "part5", name: "📖 PART 5 (Điền câu)", color: "purple" },
+            { id: "part6", name: "📖 PART 6 (Điền đoạn)", color: "purple" },
+            { id: "part7", name: "📖 PART 7 (Đọc hiểu)", color: "purple" },
+            { id: "vocab", name: "📘 Từ vựng", color: "green" },
+            { id: "grammar", name: "📙 Ngữ pháp", color: "orange" }
+        ];
+
+        // Cấu trúc lưu trữ: { categoryId: [ { id, title, content, completed } ] }
+        let notesData = {};
+
+        // Khởi tạo dữ liệu
+        function initData() {
+            const stored = localStorage.getItem("toeic_notes_categorized");
+            if (stored) {
+                notesData = JSON.parse(stored);
+            } else {
+                notesData = {};
+                CATEGORIES.forEach(cat => {
+                    notesData[cat.id] = [];
+                });
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem("toeic_notes_categorized", JSON.stringify(notesData));
+            updateOverallProgress();
+        }
+
+        // Thêm note cho category
+        function addNote(categoryId) {
+            const title = prompt("Nhập tiêu đề ghi chú (ví dụ: Mẹo Part 1, 20 từ vựng ngày 1...):");
+            if (!title) return;
+            const content = prompt("Nhập nội dung chi tiết:");
+            if (content === null) return;
+            const newNote = {
+                id: Date.now() + Math.random(),
+                title: title.trim(),
+                content: content.trim(),
+                completed: false
+            };
+            notesData[categoryId].unshift(newNote);
+            saveData();
+            renderCategories();
+        }
+
+        // Sửa note
+        function editNote(categoryId, noteId) {
+            const note = notesData[categoryId].find(n => n.id == noteId);
+            if (!note) return;
+            const newTitle = prompt("Sửa tiêu đề:", note.title);
+            if (newTitle !== null) note.title = newTitle.trim();
+            const newContent = prompt("Sửa nội dung:", note.content);
+            if (newContent !== null) note.content = newContent.trim();
+            saveData();
+            renderCategories();
+        }
+
+        // Xóa note
+        function deleteNote(categoryId, noteId) {
+            if (confirm("Xóa ghi chú này?")) {
+                notesData[categoryId] = notesData[categoryId].filter(n => n.id != noteId);
+                saveData();
+                renderCategories();
+            }
+        }
+
+        // Toggle completed
+        function toggleComplete(categoryId, noteId) {
+            const note = notesData[categoryId].find(n => n.id == noteId);
+            if (note) {
+                note.completed = !note.completed;
+                saveData();
+                renderCategories();
+            }
+        }
+
+        // Tính tiến độ cho 1 category
+        function getCategoryProgress(categoryId) {
+            const notes = notesData[categoryId] || [];
+            if (notes.length === 0) return 0;
+            const completedCount = notes.filter(n => n.completed).length;
+            return Math.round((completedCount / notes.length) * 100);
+        }
+
+        // Cập nhật tổng tiến độ
+        function updateOverallProgress() {
+            let totalNotes = 0;
+            let completedNotes = 0;
+            CATEGORIES.forEach(cat => {
+                const notes = notesData[cat.id] || [];
+                totalNotes += notes.length;
+                completedNotes += notes.filter(n => n.completed).length;
+            });
+            const percent = totalNotes === 0 ? 0 : Math.round((completedNotes / totalNotes) * 100);
+            document.getElementById("totalProgressText").innerText = `${percent}% (${completedNotes}/${totalNotes})`;
+            document.getElementById("totalProgressBar").style.width = `${percent}%`;
+        }
+
+        // Render tất cả categories
+        function renderCategories() {
+            const container = document.getElementById("categoriesContainer");
+            container.innerHTML = "";
+            CATEGORIES.forEach(cat => {
+                const notes = notesData[cat.id] || [];
+                const progress = getCategoryProgress(cat.id);
+                const colorMap = {
+                    blue: "border-blue-500 bg-blue-50",
+                    purple: "border-purple-500 bg-purple-50",
+                    green: "border-green-500 bg-green-50",
+                    orange: "border-orange-500 bg-orange-50"
+                };
+                const bgClass = colorMap[cat.color] || "border-gray-500 bg-gray-50";
+
+                const categoryDiv = document.createElement("div");
+                categoryDiv.className = `category-card bg-white rounded-2xl shadow-md overflow-hidden border-l-8 ${bgClass.split(' ')[0]}`;
+                categoryDiv.innerHTML = `
+                    <div class="p-5">
+                        <div class="flex flex-wrap justify-between items-center gap-3 mb-3">
+                            <h2 class="text-xl font-bold">${cat.name}</h2>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500">Tiến độ: ${progress}%</span>
+                                <button class="add-note-btn bg-${cat.color}-600 hover:bg-${cat.color}-700 text-white px-3 py-1 rounded-full text-sm shadow" data-cat="${cat.id}">+ Thêm ghi chú</button>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                            <div class="bg-${cat.color}-500 h-2 rounded-full" style="width: ${progress}%"></div>
+                        </div>
+                        <div id="notes-list-${cat.id}" class="space-y-2 max-h-96 overflow-y-auto">
+                            ${notes.length === 0 ? '<div class="text-gray-400 text-sm italic">Chưa có ghi chú. Hãy thêm ghi chú đầu tiên!</div>' : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(categoryDiv);
+
+                // Render danh sách note bên trong category
+                const notesContainer = document.getElementById(`notes-list-${cat.id}`);
+                if (notesContainer) {
+                    notes.forEach(note => {
+                        const noteDiv = document.createElement("div");
+                        noteDiv.className = `note-item bg-white border rounded-xl p-3 shadow-sm flex flex-col gap-2 ${note.completed ? 'completed-note' : ''}`;
+                        noteDiv.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-start gap-2 flex-1">
+                                    <input type="checkbox" class="note-checkbox mt-1 w-5 h-5" data-cat="${cat.id}" data-id="${note.id}" ${note.completed ? 'checked' : ''}>
+                                    <div class="flex-1">
+                                        <div class="font-semibold text-gray-800">${escapeHtml(note.title)}</div>
+                                        <div class="text-sm text-gray-600 mt-1 whitespace-pre-wrap">${escapeHtml(note.content)}</div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 ml-2">
+                                    <button class="edit-note text-blue-600 hover:text-blue-800 text-sm" data-cat="${cat.id}" data-id="${note.id}">✏️</button>
+                                    <button class="delete-note text-red-500 hover:text-red-700 text-sm" data-cat="${cat.id}" data-id="${note.id}">🗑️</button>
+                                </div>
+                            </div>
+                        `;
+                        notesContainer.appendChild(noteDiv);
+                    });
+                }
+            });
+
+            // Gắn sự kiện cho tất cả nút thêm
+            document.querySelectorAll(".add-note-btn").forEach(btn => {
+                btn.removeEventListener("click", addHandler);
+                btn.addEventListener("click", addHandler);
+            });
+            // Gắn sự kiện cho checkbox
+            document.querySelectorAll(".note-checkbox").forEach(cb => {
+                cb.removeEventListener("change", checkboxHandler);
+                cb.addEventListener("change", checkboxHandler);
+            });
+            // Gắn sự kiện sửa/xóa
+            document.querySelectorAll(".edit-note").forEach(btn => {
+                btn.removeEventListener("click", editHandler);
+                btn.addEventListener("click", editHandler);
+            });
+            document.querySelectorAll(".delete-note").forEach(btn => {
+                btn.removeEventListener("click", deleteHandler);
+                btn.addEventListener("click", deleteHandler);
+            });
+
+            function addHandler(e) {
+                const catId = e.currentTarget.getAttribute("data-cat");
+                addNote(catId);
+            }
+            function checkboxHandler(e) {
+                const catId = e.currentTarget.getAttribute("data-cat");
+                const noteId = e.currentTarget.getAttribute("data-id");
+                toggleComplete(catId, noteId);
+            }
+            function editHandler(e) {
+                const catId = e.currentTarget.getAttribute("data-cat");
+                const noteId = e.currentTarget.getAttribute("data-id");
+                editNote(catId, noteId);
+            }
+            function deleteHandler(e) {
+                const catId = e.currentTarget.getAttribute("data-cat");
+                const noteId = e.currentTarget.getAttribute("data-id");
+                deleteNote(catId, noteId);
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        initData();
+        renderCategories();
+    </script>
+</body>
+</html>

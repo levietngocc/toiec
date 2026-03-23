@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>TOEIC 450+ Hard Core | Lộ trình cấp tốc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%);
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.25);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .countdown-number {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-gradient text-white">
+        <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+            <div class="text-center">
+                <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-6">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span>Lộ trình cấp tốc 40 ngày</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
+                    TOEIC <span class="text-orange-400">450+</span>
+                    <br>Hard Core
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto mb-8">
+                    "Cầm chắc điểm thi chỉ trong 40 ngày"
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="schedule.html" class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold transition shadow-lg flex items-center gap-2">
+                        <i class="fas fa-calendar-alt"></i> Bắt đầu ngay
+                    </a>
+                    <a href="tips.html" class="bg-white/20 hover:bg-white/30 text-white px-8 py-3 rounded-full font-semibold transition flex items-center gap-2">
+                        <i class="fas fa-lightbulb"></i> Mẹo thi sống còn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thống kê nhanh -->
+    <div class="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl shadow-lg p-5 text-center animate-fadeInUp" style="animation-delay: 0.1s">
+                <div class="text-3xl font-bold text-blue-600">40</div>
+                <div class="text-gray-500 text-sm">Ngày cấp tốc</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-5 text-center animate-fadeInUp" style="animation-delay: 0.2s">
+                <div class="text-3xl font-bold text-green-600">70-80%</div>
+                <div class="text-gray-500 text-sm">Độ chính xác yêu cầu</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-5 text-center animate-fadeInUp" style="animation-delay: 0.3s">
+                <div class="text-3xl font-bold text-orange-600">5-7</div>
+                <div class="text-gray-500 text-sm">Đề thi thử</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-5 text-center animate-fadeInUp" style="animation-delay: 0.4s">
+                <div class="text-3xl font-bold text-purple-600">1000+</div>
+                <div class="text-gray-500 text-sm">Từ vựng trọng tâm</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 tính năng chính -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">📌 Công cụ hỗ trợ học tập</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <a href="schedule.html" class="card-hover bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-alt text-3xl text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Lịch trình 40 ngày</h3>
+                <p class="text-gray-500 text-sm">Phân chia sáng – chiều – tối chi tiết, checklist từng task nhỏ, tự động lưu tiến độ</p>
+                <div class="mt-4 text-blue-600 font-medium">Xem chi tiết →</div>
+            </a>
+
+            <a href="notes.html" class="card-hover bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-sticky-note text-3xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Ghi chú cá nhân</h3>
+                <p class="text-gray-500 text-sm">Lưu từ mới, lỗi sai, kinh nghiệm theo từng Part 1-7, Từ vựng, Ngữ pháp. Có checkbox tiến độ</p>
+                <div class="mt-4 text-blue-600 font-medium">Xem chi tiết →</div>
+            </a>
+
+            <a href="tips.html" class="card-hover bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100">
+                <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lightbulb text-3xl text-orange-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Mẹo thi sống còn</h3>
+                <p class="text-gray-500 text-sm">50+ tips từ Part 1 đến Part 7, chiến thuật làm bài, quản lý thời gian</p>
+                <div class="mt-4 text-blue-600 font-medium">Xem chi tiết →</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Nguyên tắc vàng -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 py-12">
+        <div class="max-w-5xl mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">🔥 5 NGUYÊN TẮC VÀNG ĐỂ CẦM CHẮC 400+</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-white rounded-xl p-4 shadow-sm flex gap-3">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold">1</div>
+                    <div><span class="font-semibold">Không chuyển part nếu chưa đạt % đúng chuẩn</span><br><span class="text-sm text-gray-600">Part1≥75%, Part2≥70%, Part4≥70%, Part5≥75%, Part6≥75%</span></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm flex gap-3">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold">2</div>
+                    <div><span class="font-semibold">Tự chữa trước khi xem đáp án/transcript</span><br><span class="text-sm text-gray-600">Rèn tư duy, không học vẹt</span></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm flex gap-3">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold">3</div>
+                    <div><span class="font-semibold">Nghe chép chính tả bắt buộc mỗi ngày</span><br><span class="text-sm text-gray-600">5-10 câu/ngày, tốc độ 1.1x-1.25x</span></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm flex gap-3">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold">4</div>
+                    <div><span class="font-semibold">Flashcards mỗi ngày 30 từ + ôn lại</span><br><span class="text-sm text-gray-600">Tổng cộng ít nhất 1000 từ trọng tâm</span></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm flex gap-3 md:col-span-2">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold">5</div>
+                    <div><span class="font-semibold">Thi thử ít nhất 5 đề trong 10 ngày cuối</span><br><span class="text-sm text-gray-600">Làm quen áp lực thời gian và format đề thật</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-800 text-white py-8 mt-8">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-400">
+            <p>🔥 Lộ trình được thiết kế dành cho học viên Complete TOEIC – Study4 | Target 450+ trong 40 ngày</p>
+            <p class="mt-2">© 2024 - Hard Core TOEIC | Mỗi ngày một bước tiến, 40 ngày cầm chắc điểm thi</p>
+        </div>
+    </div>
+</body>
+</html>
